@@ -1,5 +1,6 @@
 #include "file.h"
 #include "array.h"
+#include "utils.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -45,8 +46,7 @@ char *file_read(const char *filename)
 	if (!content)
 	{
 		fclose(file);
-		fprintf(stderr, "Error: malloc failed\n");
-		exit(EXIT_FAILURE);
+		exit_with_error("Error: malloc failed\n");
 	}
 
 	bytes_read = fread(content, 1, file_size, file);

@@ -1,4 +1,5 @@
 #include "array.h"
+#include "utils.h"
 #include "string.h"
 
 /**
@@ -10,14 +11,9 @@ int arr_len(char **arr)
 {
 	int i = 0;
 
-	if (!arr)
-	{
-		fprintf(stderr, "Error: malloc failed\n");
-		exit(EXIT_FAILURE);
-	}
-
-	while (arr[i])
-		i++;
+	if (arr)
+		while (arr[i])
+			i++;
 
 	return (i);
 }
@@ -37,14 +33,11 @@ char **arr_add(char **arr, const char *item)
 	else
 	{
 		alen = arr_len(arr);
-		arr = realloc(arr, sizeof(char *) * (alen + 2));
+		arr = _realloc(arr, sizeof(char *) * (alen + 2), sizeof(char *) * (alen + 3));
 	}
 
 	if (!arr)
-	{
-		fprintf(stderr, "Error: malloc failed\n");
-		exit(EXIT_FAILURE);
-	}
+		exit_with_error("Error: malloc failed\n");
 
 	arr[alen] = _strcpy(item);
 	arr[alen + 1] = NULL;

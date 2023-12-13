@@ -36,10 +36,7 @@ void parse_command_line(const char *line, int line_number)
 	current_command_line->arg = arg;
 	get_operation_func();
 	if (!current_command_line->instruction)
-	{
-		fprintf(stderr, "L%d: unknown instruction %s\n", line_number, line);
-		exit(EXIT_FAILURE);
-	}
+		exit_with_error("L%d: unknown instruction %s\n", line_number, line);
 }
 
 /**

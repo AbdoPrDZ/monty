@@ -1,4 +1,5 @@
 #include "lists.h"
+#include "utils.h"
 
 /**
  * dll_add - add node to doubly linked list int
@@ -11,10 +12,7 @@ stack_t *dll_add(stack_t **head, const int n)
 	stack_t *new = malloc(sizeof(stack_t));
 
 	if (!new)
-	{
-		fprintf(stderr, "Error: malloc failed\n");
-		exit(EXIT_FAILURE);
-	}
+		exit_with_error("Error: malloc failed\n");
 
 	new->n = n;
 	new->next = *head;
