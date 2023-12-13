@@ -1,7 +1,4 @@
 #include "monty.h"
-#include "file.h"
-#include "array.h"
-#include "string.h"
 
 command_line_t *current_command_line;
 

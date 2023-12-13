@@ -1,4 +1,4 @@
-#include "string.h"
+#include "monty.h"
 
 /**
  * _strcpy - copy string into new string

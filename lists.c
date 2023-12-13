@@ -1,5 +1,4 @@
-#include "lists.h"
-#include "utils.h"
+#include "monty.h"
 
 /**
  * dll_add - add node to doubly linked list int
@@ -24,36 +23,6 @@ stack_t *dll_add(stack_t **head, const int n)
 	*head = new;
 
 	return (new);
-}
-
-/**
- * dll_get_at_index - get node at index from doubly lined list int
- * @head: the head of doubly linked list int
- * @index: the position of node
- * Return: the node if exists, NULL if not exists
- */
-stack_t *dll_get_at_index(stack_t **head, unsigned int index)
-{
-	stack_t *node;
-	unsigned int i = 0;
-
-	if (!(*head) || (int)index < 0)
-		return (NULL);
-
-	node = *head;
-	if (node && node->prev)
-		while (node->prev)
-			node = node->prev;
-
-	while (node)
-	{
-		if (i == index)
-			return (node);
-		node = node->next;
-		i++;
-	}
-
-	return (NULL);
 }
 
 /**

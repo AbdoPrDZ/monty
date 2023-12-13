@@ -1,5 +1,4 @@
-#include "operation.h"
-#include "string.h"
+#include "monty.h"
 
 /**
  * get_operation_func - get the operation func of current command line

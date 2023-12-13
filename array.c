@@ -1,6 +1,4 @@
-#include "array.h"
-#include "utils.h"
-#include "string.h"
+#include "monty.h"
 
 /**
  * arr_len - get array length

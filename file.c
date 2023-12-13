@@ -1,8 +1,4 @@
-#include "file.h"
-#include "array.h"
-#include "utils.h"
-#include <stdlib.h>
-#include <string.h>
+#include "monty.h"
 
 /**
  * file_exists - check if file is exists
