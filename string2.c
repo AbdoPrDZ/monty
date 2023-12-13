@@ -1,5 +1,10 @@
 #include "string.h"
 
+/**
+ * str_is_int - check if the string is int
+ * @str: the string
+ * Return: 1 if is int, 0 if not
+ */
 int str_is_int(char *str)
 {
 	int i;
