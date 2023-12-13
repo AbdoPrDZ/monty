@@ -32,7 +32,6 @@ void parse_command_line(const char *line, int line_number)
 		operation = cline;
 
 	current_command_line->line_number = line_number;
-	current_command_line->line = cline;
 	current_command_line->operation = operation;
 	current_command_line->arg = arg;
 	get_operation_func();

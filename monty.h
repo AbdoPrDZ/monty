@@ -23,7 +23,6 @@ typedef struct instruction_s
 /**
  * struct command_line_s - the current line options
  * @line_number: the current command line line number
- * @line: the current command line line string
  * @operation: the current command line operation name
  * @arg: the current command line operation arg
  * @instruction: the current command line instruction
@@ -31,7 +30,6 @@ typedef struct instruction_s
 typedef struct command_line_s
 {
 	int line_number;
-	char *line;
 	char *operation;
 	char *arg;
 	instruction_t *instruction;
