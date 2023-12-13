@@ -26,21 +26,21 @@ int arr_len(char **arr)
  */
 char **arr_add(char **arr, const char *item)
 {
-	int alen = 0;
+	int i, alen = 0;
+	char **new_arr;
 
-	if (!arr)
-		arr = malloc(sizeof(char) * 1);
-	else
-	{
+	if (arr)
 		alen = arr_len(arr);
-		arr = _realloc(arr, sizeof(char *) * (alen + 2), sizeof(char *) * (alen + 3));
-	}
 
-	if (!arr)
-		exit_with_error("Error: malloc failed\n");
+	new_arr = malloc(sizeof(char *) * (alen + 3));
+	if (!new_arr)
+		exit_with_error("Error: malloc failed, alen: %d\n", alen);
 
-	arr[alen] = _strcpy(item);
-	arr[alen + 1] = NULL;
+	for (i = 0; i < alen; i++)
+		new_arr[i] = arr[i];
 
-	return (arr);
+	new_arr[alen] = _strcpy(item);
+	new_arr[alen + 1] = NULL;
+
+	return (new_arr);
 }
