@@ -70,10 +70,7 @@ char *str_cut(const char *str, const int s, const int e)
 
 	cstr = malloc(sizeof(char) * (e - s + 1));
 	if (!cstr)
-	{
-		fprintf(stderr, "Error: malloc failed\n");
-		exit(EXIT_FAILURE);
-	}
+		exit_with_malloc_error();
 
 	for (i = s, j = 0; i < e; i++, j++)
 		cstr[j] = str[i];

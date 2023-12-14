@@ -2,8 +2,9 @@
 
 /**
  * get_operation_func - get the operation func of current command line
+ * @operation_name: the operation name
  */
-void get_operation_func(void)
+void get_operation_func(const char *operation_name)
 {
 	int i;
 	instruction_t operations[] = {
@@ -14,15 +15,25 @@ void get_operation_func(void)
 		{"swap", op_swap},
 		{"add", op_add},
 		{"nop", op_nop},
+		{"sub", op_sub},
+		{"div", op_div},
+		{"mul", op_mul},
+		{"mod", op_mod},
+		{"pchar", op_pchar},
+		{"pstr", op_pstr},
+		{"rotl", op_rotl},
+		{"rotr", op_rotr},
+		{"stack", op_stack},
+		{"queue", op_queue},
 		{NULL, NULL},
 	};
 
-	current_command_line->instruction = NULL;
+	current_command_line->op_func = NULL;
 
 	for (i = 0; operations[i].opcode != NULL; i++)
-		if (strcmp(operations[i].opcode, current_command_line->operation) == 0)
+		if (strcmp(operations[i].opcode, operation_name) == 0)
 		{
-			current_command_line->instruction = &operations[i];
+			current_command_line->op_func = operations[i].f;
 			break;
 		}
 }
@@ -38,13 +49,13 @@ void op_push(stack_t **stack, unsigned int line_number)
 	(void)line_number;
 
 	if (!current_command_line->arg || !str_is_int(current_command_line->arg))
-	{
-		fprintf(stderr, "L%d: usage: push integer\n", line_number);
-		exit(EXIT_FAILURE);
-	}
+		exit_with_sntx_error("L%d: usage: push integer\n", line_number);
 
 	n = atoi(current_command_line->arg);
-	*stack = dll_add(stack, n);
+	if (strcmp(stack_mode, "LIFO") == 0)
+		*stack = dll_add(stack, n);
+	else
+		*stack = dll_add_end(stack, n);
 }
 
 /**
@@ -54,7 +65,7 @@ void op_push(stack_t **stack, unsigned int line_number)
  */
 void op_pall(stack_t **stack, unsigned int line_number)
 {
-	stack_t *node = *stack;
+	stack_t *node = stack ? *stack : NULL;
 	(void)line_number;
 
 	if (node)
@@ -77,13 +88,10 @@ void op_pall(stack_t **stack, unsigned int line_number)
  */
 void op_pint(stack_t **stack, unsigned int line_number)
 {
-	stack_t *node = *stack;
+	stack_t *node = stack ? *stack : NULL;
 
 	if (!node)
-	{
-		fprintf(stderr, "L%d: can't pint, stack empty\n", line_number);
-		exit(EXIT_FAILURE);
-	}
+		exit_with_sntx_error("L%d: can't pint, stack empty\n", line_number);
 
 	while (node->prev)
 		node = node->prev;
@@ -98,13 +106,13 @@ void op_pint(stack_t **stack, unsigned int line_number)
  */
 void op_pop(stack_t **stack, unsigned int line_number)
 {
-	stack_t *node = *stack;
+	stack_t *node = stack ? *stack : NULL;
 
 	if (!node)
-	{
-		fprintf(stderr, "L%d: can't pop, stack empty\n", line_number);
-		exit(EXIT_FAILURE);
-	}
+		exit_with_sntx_error("L%d: can't pop, stack empty\n", line_number);
 
-	*stack = dll_pop(*stack);
+	if (strcmp(stack_mode, "FIFO") == 0)
+		*stack = dll_pop(*stack);
+	else
+		*stack = dll_pop_end(*stack);
 }

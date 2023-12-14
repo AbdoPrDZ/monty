@@ -1,24 +1,6 @@
 #include "monty.h"
 
 /**
- * file_exists - check if file is exists
- * @filename: the file name
- * Return: 1 if exists, 0 if not
- */
-int file_exists(const char *filename)
-{
-	FILE *file = fopen(filename, "r");
-
-	if (file)
-	{
-		fclose(file);
-		return (1);
-	}
-
-	return (0);
-}
-
-/**
  * file_read - get file content
  * @filename: the file name
  * Return: file content
@@ -32,7 +14,7 @@ char *file_read(const char *filename)
 	FILE *file = fopen(filename, "r");
 
 	if (!file)
-		return (NULL);
+		exit_with_error("Error: Can't open file %s\n", filename);
 
 	fseek(file, 0, SEEK_END);
 	file_size = ftell(file);
@@ -42,7 +24,7 @@ char *file_read(const char *filename)
 	if (!content)
 	{
 		fclose(file);
-		exit_with_error("Error: malloc failed\n");
+		exit_with_malloc_error();
 	}
 
 	bytes_read = fread(content, 1, file_size, file);
@@ -50,7 +32,7 @@ char *file_read(const char *filename)
 	{
 		fclose(file);
 		free(content);
-		return (NULL);
+		exit_with_error("Error: Can't open file %s\n", filename);
 	}
 
 	content[file_size] = '\0';
@@ -63,26 +45,26 @@ char *file_read(const char *filename)
 /**
  * file_read_lines - get file lines
  * @filename: the file name
- * Return: the lines of file
+ * @reader: the reader function that receive the lines
  */
-char **file_read_lines(const char *filename)
+void file_read_lines(const char *filename, lines_reader reader)
 {
-	char **lines = NULL, *content, *token;
+	char *content, *line = NULL;
+	int i, line_number = 1, line_start = 0, line_end = 0;
 
 	content = file_read(filename);
-	if (!content)
-		return (NULL);
 
-	token = strtok(content, "\n");
-	while (token != NULL)
-	{
-		lines = arr_add(lines, token);
-		if (!lines)
-			return (NULL);
-		token = strtok(NULL, "\n");
-	}
+	for (i = 0; content[i] != '\0'; i++)
+		if (content[i] == '\n' || content[i + 1] == '\0')
+		{
+			line_end = i + (content[i + 1] == '\0' && content[i] != '\n' ? 1 : 0);
+			line = str_cut(content, line_start, line_end);
+			reader(line, line_number);
+			line_number++;
+			line_start = i + 1;
+		}
 
+	if (line)
+		free(line);
 	free(content);
-
-	return (lines);
 }

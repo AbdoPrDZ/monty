@@ -18,3 +18,29 @@ int str_is_int(char *str)
 
 	return (1);
 }
+/**
+ * str_add_char - add char to the string
+ * @str: the string
+ * @c: the char
+ * Return: the new string
+ */
+char *str_add_char(const char *str, char c)
+{
+	int i = 0, str_len = 0;
+	char *new_str;
+
+	if (str)
+		str_len = strlen(str);
+
+	new_str = malloc(sizeof(char) * (str_len + 2));
+	if (!new_str)
+		exit_with_malloc_error();
+
+	for (i = 0; i < str_len; i++)
+		new_str[i] = str[i];
+
+	new_str[i] = c;
+	new_str[i + 1] = '\0';
+
+	return (new_str);
+}

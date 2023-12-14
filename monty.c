@@ -1,39 +1,47 @@
 #include "monty.h"
 
 command_line_t *current_command_line;
+stack_t *global_stack;
+char *stack_mode;
 
 /**
- * parse_command_line - parse command line
+ * execute_command_line - execute the current command line
  * @line: the line we want to parse
  * @line_number: the number of line in file
  */
-void parse_command_line(const char *line, int line_number)
+void execute_command_line(const char *line, unsigned int line_number)
 {
 	int space_pos, line_len;
 	char *cline;
 	char *operation, *arg = NULL;
 
+	current_command_line->arg = NULL;
+	current_command_line->op_func = NULL;
 	cline = str_clean_spaces_se(line);
 	line_len = strlen(cline);
-	space_pos = str_contains_char(cline, ' ');
-
-	if (space_pos != -1)
+	if (cline[0] != '#' && line_len != 0)
 	{
-		operation = str_cut(cline, 0, space_pos);
-		arg = str_clean_spaces_se(str_cut(cline, space_pos, line_len));
-		space_pos = str_contains_char(arg, ' ');
+		space_pos = str_contains_char(cline, ' ');
 		if (space_pos != -1)
-			arg = str_cut(arg, 0, space_pos);
-	}
-	else
-		operation = cline;
+		{
+			operation = str_cut(cline, 0, space_pos);
+			arg = str_clean_spaces_se(str_cut(cline, space_pos, line_len));
+			space_pos = str_contains_char(arg, ' ');
+			if (space_pos != -1)
+				arg = str_cut(arg, 0, space_pos);
+		}
+		else
+			operation = cline;
 
-	current_command_line->line_number = line_number;
-	current_command_line->operation = operation;
-	current_command_line->arg = arg;
-	get_operation_func();
-	if (!current_command_line->instruction)
-		exit_with_error("L%d: unknown instruction %s\n", line_number, line);
+		current_command_line->arg = arg;
+		get_operation_func(operation);
+
+		if (current_command_line->op_func)
+			current_command_line->op_func(&global_stack, line_number);
+		else
+			exit_with_error("L%d: unknown instruction %s\n", line_number, line);
+	}
+	free(cline);
 }
 
 /**
@@ -44,42 +52,23 @@ void parse_command_line(const char *line, int line_number)
  */
 int main(int argc, char *argv[])
 {
-	stack_t *stack;
-	char *filename, **lines;
-	int i = 0;
+	char *filename;
 
 	if (argc != 2)
-	{
-		fprintf(stderr, "USAGE: monty file\n");
-		exit(EXIT_FAILURE);
-	}
+		exit_with_error("USAGE: monty file\n");
 
 	filename = argv[1];
-	if (!file_exists(filename))
-	{
-		fprintf(stderr, "Error: Can't open file %s\n", filename);
-		exit(EXIT_FAILURE);
-	}
 
-	lines = file_read_lines(filename);
-
+	global_stack = NULL;
+	stack_mode = "LIFO";
 	current_command_line = malloc(sizeof(command_line_t));
 	if (!current_command_line)
-	{
-		fprintf(stderr, "Error: malloc failed\n");
-		exit(EXIT_FAILURE);
-	}
+		exit_with_malloc_error();
 
-	for (i = 0; lines[i] != NULL; i++)
-	{
-		parse_command_line(lines[i], i);
-		if (current_command_line->instruction != NULL)
-			current_command_line->instruction->f(&stack, i);
-	}
-	free(current_command_line);
+	file_read_lines(filename, execute_command_line);
 
-	if (stack)
-		dll_free(stack);
+	if (global_stack)
+		dll_free(global_stack);
 
 	return (EXIT_SUCCESS);
 }

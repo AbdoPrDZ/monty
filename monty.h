@@ -38,34 +38,30 @@ typedef struct instruction_s
 
 /**
  * struct command_line_s - the current line options
- * @line_number: the current command line line number
- * @operation: the current command line operation name
  * @arg: the current command line operation arg
- * @instruction: the current command line instruction
+ * @op_func: the current command line operation function
  */
 typedef struct command_line_s
 {
-	int line_number;
-	char *operation;
 	char *arg;
-	instruction_t *instruction;
+	void (*op_func)(stack_t **stack, unsigned int line_number);
 } command_line_t;
 
 extern command_line_t *current_command_line;
+extern stack_t *global_stack;
+extern char *stack_mode;
 
 /* Doubly linked list int functions */
 stack_t *dll_add(stack_t **head, const int n);
+stack_t *dll_add_end(stack_t **head, const int n);
 stack_t *dll_pop(stack_t *head);
+stack_t *dll_pop_end(stack_t *head);
 void dll_free(stack_t *head);
 
 /* File functions */
-int file_exists(const char *filename);
 char *file_read(const char *filename);
-char **file_read_lines(const char *filename);
-
-/* Array functions */
-int arr_len(char **arr);
-char **arr_add(char **arr, const char *item);
+typedef void (*lines_reader)(const char *, unsigned int);
+void file_read_lines(const char *filename, lines_reader);
 
 /* String functions */
 char *_strcpy(const char *str);
@@ -74,11 +70,14 @@ int str_contains_char(const char *str, const char target);
 char *str_cut(const char *str, const int s, const int e);
 char *str_clean_spaces_se(const char *str);
 int str_is_int(char *str);
+char *str_add_char(const char *str, char c);
 
 /* Others */
+void exit_with_malloc_error(void);
+void exit_with_sntx_error(const char *error, unsigned int line_number);
 void exit_with_error(const char *error, ...);
-void parse_command_line(const char *line, int line_number);
-void get_operation_func(void);
+void execute_command_line(const char *line, unsigned int line_number);
+void get_operation_func(const char *operation_name);
 
 /* Operations functions */
 void op_push(stack_t **stack, unsigned int line_number);
@@ -88,5 +87,15 @@ void op_pop(stack_t **stack, unsigned int line_number);
 void op_swap(stack_t **stack, unsigned int line_number);
 void op_add(stack_t **stack, unsigned int line_number);
 void op_nop(stack_t **stack, unsigned int line_number);
+void op_sub(stack_t **stack, unsigned int line_number);
+void op_div(stack_t **stack, unsigned int line_number);
+void op_mul(stack_t **stack, unsigned int line_number);
+void op_mod(stack_t **stack, unsigned int line_number);
+void op_pchar(stack_t **stack, unsigned int line_number);
+void op_pstr(stack_t **stack, unsigned int line_number);
+void op_rotl(stack_t **stack, unsigned int line_number);
+void op_rotr(stack_t **stack, unsigned int line_number);
+void op_stack(stack_t **stack, unsigned int line_number);
+void op_queue(stack_t **stack, unsigned int line_number);
 
 #endif /* _MONTY_H_ */
