@@ -45,7 +45,7 @@ void op_stack(stack_t **stack, unsigned int line_number)
 }
 
 /**
- * op_stack - set stack mode to FIFO mode
+ * op_queue - set stack mode to FIFO mode
  * @stack: the stack
  * @line_number: the number of line in file
  */
