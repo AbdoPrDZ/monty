@@ -105,7 +105,7 @@ void op_sub(stack_t **stack, unsigned int line_number)
 		{
 			second = first->next;
 
-			second->n = first->n - second->n;
+			second->n = second->n - first->n;
 			first->next = NULL;
 			second->prev = NULL;
 			first = _free(first);
@@ -142,7 +142,7 @@ void op_div(stack_t **stack, unsigned int line_number)
 				make_sntx_err("L%d: division by zero\n", line_number, NULL);
 			else
 			{
-				second->n = first->n - second->n;
+				second->n = second->n / first->n;
 				first->next = NULL;
 				second->prev = NULL;
 				first = _free(first);

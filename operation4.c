@@ -11,7 +11,7 @@ void op_rotr(stack_t **stack, unsigned int line_number)
 	int last_n;
 	(void)line_number;
 
-	if (node && node->next)
+	if (node)
 	{
 		node = *stack;
 

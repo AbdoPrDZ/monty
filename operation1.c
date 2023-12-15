@@ -54,7 +54,7 @@ void op_push(stack_t **stack, unsigned int line_number)
 	else
 	{
 		n = atoi(current_command_line->arg);
-		if (strcmp(app_var.stack_mode, "LIFO") == 0)
+		if (strcmp(app_var.stack_mode, LIFO_T) == 0)
 			*stack = dll_add(stack, n);
 		else
 			*stack = dll_add_end(stack, n);
