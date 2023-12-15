@@ -10,8 +10,11 @@ stack_t *dll_add(stack_t **head, const int n)
 {
 	stack_t *new = malloc(sizeof(stack_t));
 
-	if (!new)
-		exit_with_malloc_error();
+	if (new == NULL)
+	{
+		make_malloc_err();
+		return (NULL);
+	}
 
 	new->n = n;
 	new->next = NULL;
@@ -39,8 +42,11 @@ stack_t *dll_add_end(stack_t **head, const int n)
 	stack_t *node;
 	stack_t *new = malloc(sizeof(stack_t));
 
-	if (!new)
-		exit_with_malloc_error();
+	if (new == NULL)
+	{
+		make_malloc_err();
+		return (NULL);
+	}
 
 	new->n = n;
 	new->next = NULL;
@@ -80,14 +86,11 @@ stack_t *dll_pop(stack_t *head)
 		{
 			tmp->prev = NULL;
 			head->next = NULL;
-			free(head);
+			_free(head);
 			head = tmp;
 		}
 		else
-		{
-			free(head);
-			head = NULL;
-		}
+			head = _free(head);
 	}
 
 	return (head);
@@ -105,10 +108,8 @@ stack_t *dll_pop_end(stack_t *head)
 	if (head)
 	{
 		if (!head->next)
-		{
-			free(head);
-			head = NULL;
-		}
+			head = _free(head);
+
 		else
 		{
 			while (head->next)
@@ -116,7 +117,7 @@ stack_t *dll_pop_end(stack_t *head)
 
 			tmp = head->prev;
 			tmp->next = NULL;
-			free(head);
+			_free(head);
 			head = tmp;
 		}
 	}
@@ -128,7 +129,7 @@ stack_t *dll_pop_end(stack_t *head)
  * dll_free - free doubly linked list int
  * @head: the head of doubly linked list int
  */
-void dll_free(stack_t *head)
+void *dll_free(stack_t *head)
 {
 	stack_t *next;
 
@@ -140,8 +141,9 @@ void dll_free(stack_t *head)
 		while (head)
 		{
 			next = head->next;
-			free(head);
+			_free(head);
 			head = next;
 		}
 	}
+	return (NULL);
 }

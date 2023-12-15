@@ -4,7 +4,7 @@
  * get_operation_func - get the operation func of current command line
  * @operation_name: the operation name
  */
-void get_operation_func(const char *operation_name)
+void get_operation_func(char *operation_name)
 {
 	int i;
 	instruction_t operations[] = {
@@ -49,13 +49,15 @@ void op_push(stack_t **stack, unsigned int line_number)
 	(void)line_number;
 
 	if (!current_command_line->arg || !str_is_int(current_command_line->arg))
-		exit_with_sntx_error("L%d: usage: push integer\n", line_number);
-
-	n = atoi(current_command_line->arg);
-	if (strcmp(stack_mode, "LIFO") == 0)
-		*stack = dll_add(stack, n);
+		make_sntx_err("L%d: usage: push integer\n", line_number, NULL);
 	else
-		*stack = dll_add_end(stack, n);
+	{
+		n = atoi(current_command_line->arg);
+		if (strcmp(stack_mode, "LIFO") == 0)
+			*stack = dll_add(stack, n);
+		else
+			*stack = dll_add_end(stack, n);
+	}
 }
 
 /**
@@ -90,13 +92,15 @@ void op_pint(stack_t **stack, unsigned int line_number)
 {
 	stack_t *node = stack ? *stack : NULL;
 
-	if (!node)
-		exit_with_sntx_error("L%d: can't pint, stack empty\n", line_number);
+	if (node == NULL)
+		make_sntx_err("L%d: can't pint, stack empty\n", line_number, NULL);
+	else
+	{
+		while (node->prev)
+			node = node->prev;
 
-	while (node->prev)
-		node = node->prev;
-
-	fprintf(stdout, "%d\n", node->n);
+		fprintf(stdout, "%d\n", node->n);
+	}
 }
 
 /**
@@ -108,11 +112,13 @@ void op_pop(stack_t **stack, unsigned int line_number)
 {
 	stack_t *node = stack ? *stack : NULL;
 
-	if (!node)
-		exit_with_sntx_error("L%d: can't pop, stack empty\n", line_number);
-
-	if (strcmp(stack_mode, "FIFO") == 0)
-		*stack = dll_pop(*stack);
+	if (node == NULL)
+		make_sntx_err("L%d: can't pop, stack empty\n", line_number, NULL);
 	else
-		*stack = dll_pop_end(*stack);
+	{
+		if (strcmp(stack_mode, "FIFO") == 0)
+			*stack = dll_pop(*stack);
+		else
+			*stack = dll_pop_end(*stack);
+	}
 }

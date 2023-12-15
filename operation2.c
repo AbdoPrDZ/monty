@@ -10,28 +10,32 @@ void op_swap(stack_t **stack, unsigned int line_number)
 	stack_t *first = stack ? *stack : NULL;
 	stack_t *second, *thread;
 
-	if (!first)
-		exit_with_sntx_error("L%d: can't swap, stack too short\n", line_number);
-
-	while (first->prev)
-		first = first->prev;
-
-	if (!first->next)
-		exit_with_sntx_error("L%d: can't swap, stack too short\n", line_number);
-
-	second = first->next;
-	thread = second->next;
-
-	if (thread)
-		first->next = thread;
+	if (first == NULL)
+		make_sntx_err("L%d: can't swap, stack too short\n", line_number, NULL);
 	else
-		first->next = NULL;
-	thread->prev = first;
-	second->prev = NULL;
-	second->next = first;
-	first->prev = second;
+	{
+		while (first->prev)
+			first = first->prev;
 
-	*stack = second;
+		if (first->next == NULL)
+			make_sntx_err("L%d: can't swap, stack too short\n", line_number, NULL);
+		else
+		{
+			second = first->next;
+			thread = second->next;
+
+			if (thread)
+				first->next = thread;
+			else
+				first->next = NULL;
+			thread->prev = first;
+			second->prev = NULL;
+			second->next = first;
+			first->prev = second;
+
+			*stack = second;
+		}
+	}
 }
 
 /**
@@ -44,23 +48,27 @@ void op_add(stack_t **stack, unsigned int line_number)
 	stack_t *first = stack ? *stack : NULL;
 	stack_t *second;
 
-	if (!first)
-		exit_with_sntx_error("L%d: can't add, stack too short\n", line_number);
+	if (first == NULL)
+		make_sntx_err("L%d: can't add, stack too short\n", line_number, NULL);
+	else
+	{
+		while (first->prev)
+			first = first->prev;
 
-	while (first->prev)
-		first = first->prev;
+		if (first->next == NULL)
+			make_sntx_err("L%d: can't add, stack too short\n", line_number, NULL);
+		else
+		{
+			second = first->next;
 
-	if (!first->next)
-		exit_with_sntx_error("L%d: can't add, stack too short\n", line_number);
+			second->n = first->n + second->n;
+			first->next = NULL;
+			second->prev = NULL;
+			first = _free(first);
 
-	second = first->next;
-
-	second->n = first->n + second->n;
-	first->next = NULL;
-	second->prev = NULL;
-	free(first);
-
-	*stack = second;
+			*stack = second;
+		}
+	}
 }
 
 /**
@@ -84,23 +92,27 @@ void op_sub(stack_t **stack, unsigned int line_number)
 	stack_t *first = stack ? *stack : NULL;
 	stack_t *second;
 
-	if (!first)
-		exit_with_sntx_error("L%d: can't sub, stack too short\n", line_number);
+	if (first == NULL)
+		make_sntx_err("L%d: can't sub, stack too short\n", line_number, NULL);
+	else
+	{
+		while (first->prev)
+			first = first->prev;
 
-	while (first->prev)
-		first = first->prev;
+		if (first->next == NULL)
+			make_sntx_err("L%d: can't sub, stack too short\n", line_number, NULL);
+		else
+		{
+			second = first->next;
 
-	if (!first->next)
-		exit_with_sntx_error("L%d: can't sub, stack too short\n", line_number);
+			second->n = first->n - second->n;
+			first->next = NULL;
+			second->prev = NULL;
+			first = _free(first);
 
-	second = first->next;
-
-	second->n = first->n - second->n;
-	first->next = NULL;
-	second->prev = NULL;
-	free(first);
-
-	*stack = second;
+			*stack = second;
+		}
+	}
 }
 
 /**
@@ -113,24 +125,30 @@ void op_div(stack_t **stack, unsigned int line_number)
 	stack_t *first = stack ? *stack : NULL;
 	stack_t *second;
 
-	if (!first)
-		exit_with_sntx_error("L%d: can't div, stack too short\n", line_number);
+	if (first == NULL)
+		make_sntx_err("L%d: can't div, stack too short\n", line_number, NULL);
+	else
+	{
+		while (first->prev)
+			first = first->prev;
 
-	while (first->prev)
-		first = first->prev;
+		if (first->next == NULL)
+			make_sntx_err("L%d: can't div, stack too short\n", line_number, NULL);
+		else
+		{
+			second = first->next;
 
-	if (!first->next)
-		exit_with_sntx_error("L%d: can't div, stack too short\n", line_number);
+			if (second->n == 0)
+				make_sntx_err("L%d: division by zero\n", line_number, NULL);
+			else
+			{
+				second->n = first->n - second->n;
+				first->next = NULL;
+				second->prev = NULL;
+				first = _free(first);
 
-	second = first->next;
-
-	if (second->n == 0)
-		exit_with_sntx_error("L%d: division by zero\n", line_number);
-
-	second->n = first->n - second->n;
-	first->next = NULL;
-	second->prev = NULL;
-	free(first);
-
-	*stack = second;
+				*stack = second;
+			}
+		}
+	}
 }

@@ -7,24 +7,28 @@
  */
 int str_is_int(char *str)
 {
-	int i;
+	int i = 0;
 
-	if (!str)
+	if (str == NULL)
 		return (0);
 
-	for (i = 0; str[i] != '\0'; i++)
+	if (str[0] == '-')
+		i++;
+
+	for (; str[i] != '\0'; i++)
 		if (!(str[i] >= '0' && str[i] <= '9'))
 			return (0);
 
 	return (1);
 }
+
 /**
  * str_add_char - add char to the string
  * @str: the string
  * @c: the char
  * Return: the new string
  */
-char *str_add_char(const char *str, char c)
+char *str_add_char(char *str, char c)
 {
 	int i = 0, str_len = 0;
 	char *new_str;
@@ -33,8 +37,11 @@ char *str_add_char(const char *str, char c)
 		str_len = strlen(str);
 
 	new_str = malloc(sizeof(char) * (str_len + 2));
-	if (!new_str)
-		exit_with_malloc_error();
+	if (new_str == NULL)
+	{
+		make_malloc_err();
+		return (NULL);
+	}
 
 	for (i = 0; i < str_len; i++)
 		new_str[i] = str[i];

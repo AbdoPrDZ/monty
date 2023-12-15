@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdarg.h>
 
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
@@ -38,46 +37,69 @@ typedef struct instruction_s
 
 /**
  * struct command_line_s - the current line options
+ * @line: the bytecode line
+ * @line_number: the bytecode line number
  * @arg: the current command line operation arg
  * @op_func: the current command line operation function
  */
 typedef struct command_line_s
 {
+	char *line;
+	unsigned int line_number;
 	char *arg;
 	void (*op_func)(stack_t **stack, unsigned int line_number);
 } command_line_t;
 
+/**
+ * struct app_err_s - the app error
+ * @type: the error type
+ * @error: the error error
+ * @line: the bytecode line
+ * @line_number: the bytecode line number
+ * @filename: the bytecode file name
+ */
+typedef struct app_err_s
+{
+	char *type;
+	char *error;
+	char *line;
+	int line_number;
+	char *filename;
+} app_err_t;
+
+#define FILE_err "FILE_err"
+#define SYNTAX_err "SYNTAX_err"
+#define MALLOC_err "MALLOC_err"
+
 extern command_line_t *current_command_line;
 extern stack_t *global_stack;
 extern char *stack_mode;
+extern app_err_t *app_err;
+
+/* File functions */
+/**
+ * typeof lines_reader - the typeof file lines reader function
+ * @line: the line string
+ * @line_number: the line number
+ * Return: 1 success, 0 error
+ */
+typedef int (*lines_reader)(char *, unsigned int);
+void file_read_lines(char *filename, lines_reader);
 
 /* Doubly linked list int functions */
 stack_t *dll_add(stack_t **head, const int n);
 stack_t *dll_add_end(stack_t **head, const int n);
 stack_t *dll_pop(stack_t *head);
 stack_t *dll_pop_end(stack_t *head);
-void dll_free(stack_t *head);
-
-/* File functions */
-char *file_read(const char *filename);
-typedef void (*lines_reader)(const char *, unsigned int);
-void file_read_lines(const char *filename, lines_reader);
+void *dll_free(stack_t *head);
 
 /* String functions */
-char *_strcpy(const char *str);
-char *str_rev(const char *str);
-int str_contains_char(const char *str, const char target);
-char *str_cut(const char *str, const int s, const int e);
-char *str_clean_spaces_se(const char *str);
+char *_strcpy(char *str);
+int str_contains_char(char *str, char target);
+char *str_cut(char *str, const int s, const int e);
+char *str_clean_spaces_se(char *str);
 int str_is_int(char *str);
-char *str_add_char(const char *str, char c);
-
-/* Others */
-void exit_with_malloc_error(void);
-void exit_with_sntx_error(const char *error, unsigned int line_number);
-void exit_with_file_error(const char *filename);
-void execute_command_line(const char *line, unsigned int line_number);
-void get_operation_func(const char *operation_name);
+char *str_add_char(char *str, char c);
 
 /* Operations functions */
 void op_push(stack_t **stack, unsigned int line_number);
@@ -97,5 +119,19 @@ void op_rotl(stack_t **stack, unsigned int line_number);
 void op_rotr(stack_t **stack, unsigned int line_number);
 void op_stack(stack_t **stack, unsigned int line_number);
 void op_queue(stack_t **stack, unsigned int line_number);
+
+/* Others */
+void make_file_err(char *filename);
+void make_malloc_err(void);
+void make_sntx_err(char *error, unsigned int ln, char *line);
+void exit_failure(void);
+void exit_with_malloc_err(void);
+void exit_with_app_err(void);
+void exit_with_sntx_err(void);
+void exit_with_file_err(char *filename);
+void reset_current_command_line(void);
+void *_free(void *ptr);
+int execute_command_line(char *line, unsigned int line_number);
+void get_operation_func(char *operation_name);
 
 #endif /* _MONTY_H_ */
