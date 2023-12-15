@@ -41,7 +41,7 @@ void op_stack(stack_t **stack, unsigned int line_number)
 	(void)stack;
 	(void)line_number;
 
-	stack_mode = "LIFO";
+	app_var.stack_mode = LIFO_T;
 }
 
 /**
@@ -54,5 +54,5 @@ void op_queue(stack_t **stack, unsigned int line_number)
 	(void)stack;
 	(void)line_number;
 
-	stack_mode = "FIFO";
+	app_var.stack_mode = FIFO_T;
 }

@@ -28,12 +28,12 @@ void get_operation_func(char *operation_name)
 		{NULL, NULL},
 	};
 
-	current_command_line->op_func = NULL;
+	app_var.current_command_line->op_func = NULL;
 
 	for (i = 0; operations[i].opcode != NULL; i++)
 		if (strcmp(operations[i].opcode, operation_name) == 0)
 		{
-			current_command_line->op_func = operations[i].f;
+			app_var.current_command_line->op_func = operations[i].f;
 			break;
 		}
 }
@@ -46,6 +46,7 @@ void get_operation_func(char *operation_name)
 void op_push(stack_t **stack, unsigned int line_number)
 {
 	int n;
+	command_line_t *current_command_line = app_var.current_command_line;
 	(void)line_number;
 
 	if (!current_command_line->arg || !str_is_int(current_command_line->arg))
@@ -53,7 +54,7 @@ void op_push(stack_t **stack, unsigned int line_number)
 	else
 	{
 		n = atoi(current_command_line->arg);
-		if (strcmp(stack_mode, "LIFO") == 0)
+		if (strcmp(app_var.stack_mode, "LIFO") == 0)
 			*stack = dll_add(stack, n);
 		else
 			*stack = dll_add_end(stack, n);
@@ -116,7 +117,7 @@ void op_pop(stack_t **stack, unsigned int line_number)
 		make_sntx_err("L%d: can't pop, stack empty\n", line_number, NULL);
 	else
 	{
-		if (strcmp(stack_mode, "FIFO") == 0)
+		if (strcmp(app_var.stack_mode, FIFO_T) == 0)
 			*stack = dll_pop(*stack);
 		else
 			*stack = dll_pop_end(*stack);

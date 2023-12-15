@@ -6,13 +6,16 @@
  */
 void make_file_err(char *filename)
 {
-	app_err = malloc(sizeof(app_err_t));
+
+	app_err_t *app_err = malloc(sizeof(app_err_t));
 	if (app_err == NULL)
 		exit_with_malloc_err();
 
 	app_err->type = FILE_err;
 	app_err->error = "Error: Can't open file %s\n";
 	app_err->filename = filename;
+
+	app_var.app_err = app_err;
 }
 
 /**
@@ -23,7 +26,7 @@ void make_file_err(char *filename)
  */
 void make_sntx_err(char *error, unsigned int ln, char *line)
 {
-	app_err = malloc(sizeof(app_err_t));
+	app_err_t *app_err = malloc(sizeof(app_err_t));
 	if (app_err == NULL)
 		exit_with_malloc_err();
 
@@ -31,6 +34,8 @@ void make_sntx_err(char *error, unsigned int ln, char *line)
 	app_err->error = error;
 	app_err->line = _strcpy(line);
 	app_err->line_number = ln;
+
+	app_var.app_err = app_err;
 }
 
 /**
@@ -38,11 +43,13 @@ void make_sntx_err(char *error, unsigned int ln, char *line)
  */
 void make_malloc_err(void)
 {
-	app_err = malloc(sizeof(app_err_t));
+	app_err_t *app_err = malloc(sizeof(app_err_t));
 	if (app_err == NULL)
 		exit_with_malloc_err();
 
 	app_err->type = MALLOC_err;
+
+	app_var.app_err = app_err;
 }
 
 /**
@@ -50,6 +57,8 @@ void make_malloc_err(void)
  */
 void reset_current_command_line(void)
 {
+	command_line_t *current_command_line = app_var.current_command_line;
+
 	if (current_command_line)
 	{
 		current_command_line->line = _free(current_command_line->line);

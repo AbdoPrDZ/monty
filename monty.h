@@ -67,14 +67,29 @@ typedef struct app_err_s
 	char *filename;
 } app_err_t;
 
+/**
+ * struct app_var_s - the app var
+ * @current_command_line: the current command line
+ * @global_stack: the global stack
+ * @stack_mode: the stack mode (FIFO, LIFO)
+ * @app_err: the app error
+ */
+typedef struct app_var_s
+{
+	command_line_t *current_command_line;
+	stack_t *global_stack;
+	char *stack_mode;
+	app_err_t *app_err;
+} app_var_t;
+
 #define FILE_err "FILE_err"
 #define SYNTAX_err "SYNTAX_err"
 #define MALLOC_err "MALLOC_err"
 
-extern command_line_t *current_command_line;
-extern stack_t *global_stack;
-extern char *stack_mode;
-extern app_err_t *app_err;
+#define FIFO_T "FIFO"
+#define LIFO_T "LIFO"
+
+extern app_var_t app_var;
 
 /* File functions */
 /**

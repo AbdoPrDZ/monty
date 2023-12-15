@@ -5,6 +5,7 @@
  */
 void exit_with_app_err(void)
 {
+	app_err_t *app_err = app_var.app_err;
 	if (app_err)
 	{
 		if (strcmp(app_err->type, MALLOC_err) == 0)
@@ -30,6 +31,8 @@ void exit_with_malloc_err(void)
  */
 void exit_with_sntx_err(void)
 {
+	app_err_t *app_err = app_var.app_err;
+
 	fprintf(stderr, app_err->error, app_err->line_number, app_err->line);
 	app_err->line = _free(app_err->line);
 	exit_failure();
@@ -50,7 +53,7 @@ void exit_with_file_err(char *filename)
  */
 void exit_failure(void)
 {
-	global_stack = dll_free(global_stack);
+	app_var.global_stack = dll_free(app_var.global_stack);
 	reset_current_command_line();
 
 	exit(EXIT_FAILURE);

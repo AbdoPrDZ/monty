@@ -58,7 +58,7 @@ void file_read_lines(char *filename, lines_reader reader)
 	int i, line_number = 1, line_start = 0, line_end = 0;
 
 	content = file_read(filename);
-	if (app_err)
+	if (app_var.app_err)
 		return;
 
 	for (i = 0; content[i] != '\0'; i++)
@@ -66,7 +66,7 @@ void file_read_lines(char *filename, lines_reader reader)
 		{
 			line_end = i + (content[i + 1] == '\0' && content[i] != '\n' ? 1 : 0);
 			line = str_cut(content, line_start, line_end);
-			if (app_err)
+			if (app_var.app_err)
 				return;
 			if (!reader(line, line_number))
 			{
