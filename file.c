@@ -14,7 +14,7 @@ char *file_read(const char *filename)
 	FILE *file = fopen(filename, "r");
 
 	if (!file)
-		exit_with_error("Error: Can't open file %s\n", filename);
+		exit_with_file_error(filename);
 
 	fseek(file, 0, SEEK_END);
 	file_size = ftell(file);
@@ -32,7 +32,7 @@ char *file_read(const char *filename)
 	{
 		fclose(file);
 		free(content);
-		exit_with_error("Error: Can't open file %s\n", filename);
+		exit_with_file_error(filename);
 	}
 
 	content[file_size] = '\0';

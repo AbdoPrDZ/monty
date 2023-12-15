@@ -39,7 +39,14 @@ void execute_command_line(const char *line, unsigned int line_number)
 		if (current_command_line->op_func)
 			current_command_line->op_func(&global_stack, line_number);
 		else
-			exit_with_error("L%d: unknown instruction %s\n", line_number, line);
+		{
+			if (global_stack)
+				dll_free(global_stack);
+
+			fprintf(stderr, "L%d: unknown instruction %s\n", line_number, line);
+
+			exit(EXIT_FAILURE);
+		}
 	}
 	free(cline);
 }
@@ -55,7 +62,10 @@ int main(int argc, char *argv[])
 	char *filename;
 
 	if (argc != 2)
-		exit_with_error("USAGE: monty file\n");
+	{
+		fprintf(stderr, "USAGE: monty file\n");
+		exit(EXIT_FAILURE);
+	}
 
 	filename = argv[1];
 

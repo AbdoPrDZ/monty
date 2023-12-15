@@ -75,7 +75,7 @@ char *str_add_char(const char *str, char c);
 /* Others */
 void exit_with_malloc_error(void);
 void exit_with_sntx_error(const char *error, unsigned int line_number);
-void exit_with_error(const char *error, ...);
+void exit_with_file_error(const char *filename);
 void execute_command_line(const char *line, unsigned int line_number);
 void get_operation_func(const char *operation_name);
 

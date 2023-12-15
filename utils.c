@@ -5,10 +5,10 @@
  */
 void exit_with_malloc_error(void)
 {
-	fprintf(stderr, "Error: malloc failed\n");
-
 	if (global_stack)
 		dll_free(global_stack);
+
+	fprintf(stderr, "Error: malloc failed\n");
 
 	exit(EXIT_FAILURE);
 }
@@ -20,28 +20,23 @@ void exit_with_malloc_error(void)
  */
 void exit_with_sntx_error(const char *error, unsigned int line_number)
 {
-	fprintf(stderr, error, line_number);
-
 	if (global_stack)
 		dll_free(global_stack);
+
+	fprintf(stderr, error, line_number);
 
 	exit(EXIT_FAILURE);
 }
 
 /**
- * exit_with_error - exit the program with error
- * @error: the error message
+ * exit_with_file_error - exit the program with file error
+ * @filename: the file name
  */
-void exit_with_error(const char *error, ...)
+void exit_with_file_error(const char *filename)
 {
-	va_list args;
-
-	va_start(args, error);
-	fprintf(stderr, error, args);
-	va_end(args);
-
 	if (global_stack)
 		dll_free(global_stack);
 
+	fprintf(stderr, "Error: Can't open file %s\n", filename);
 	exit(EXIT_FAILURE);
 }
