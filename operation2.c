@@ -122,8 +122,6 @@ void op_div(stack_t **stack, unsigned int line_number)
 	if (!first->next)
 		exit_with_sntx_error("L%d: can't div, stack too short\n", line_number);
 
-	printf("here\n");
-
 	second = first->next;
 
 	if (second->n == 0)
