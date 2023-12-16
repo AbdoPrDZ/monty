@@ -10,7 +10,7 @@ stack_t *dll_add(stack_t **head, const int n)
 {
 	stack_t *new = malloc(sizeof(stack_t));
 
-	if (new == NULL)
+	if (!new)
 	{
 		make_malloc_err();
 		return (NULL);
@@ -42,7 +42,7 @@ stack_t *dll_add_end(stack_t **head, const int n)
 	stack_t *node;
 	stack_t *new = malloc(sizeof(stack_t));
 
-	if (new == NULL)
+	if (!new)
 	{
 		make_malloc_err();
 		return (NULL);

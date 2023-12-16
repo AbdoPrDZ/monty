@@ -24,7 +24,7 @@ char *file_read(char *filename)
 	fseek(file, 0, SEEK_SET);
 
 	content = (char *)malloc(file_size + 1);
-	if (content == NULL)
+	if (!content)
 	{
 		fclose(file);
 		make_malloc_err();

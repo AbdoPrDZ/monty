@@ -118,7 +118,7 @@ int execute_command_line(char *line, unsigned int line_number)
 	current_command_line->op_func = NULL;
 
 	cline = str_clean_spaces_se(line);
-	if (cline == NULL && app_err)
+	if (app_err)
 		return (0);
 
 	line_len = strlen(cline);

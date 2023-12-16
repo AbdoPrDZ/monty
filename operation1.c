@@ -93,15 +93,15 @@ void op_pint(stack_t **stack, unsigned int line_number)
 {
 	stack_t *node = stack ? *stack : NULL;
 
-	if (node == NULL)
-		make_sntx_err("L%d: can't pint, stack empty\n", line_number, NULL);
-	else
+	if (node)
 	{
 		while (node->prev)
 			node = node->prev;
 
 		fprintf(stdout, "%d\n", node->n);
 	}
+	else
+		make_sntx_err("L%d: can't pint, stack empty\n", line_number, NULL);
 }
 
 /**
@@ -113,13 +113,13 @@ void op_pop(stack_t **stack, unsigned int line_number)
 {
 	stack_t *node = stack ? *stack : NULL;
 
-	if (node == NULL)
-		make_sntx_err("L%d: can't pop an empty stack\n", line_number, NULL);
-	else
+	if (node)
 	{
-		if (strcmp(app_var.stack_mode, FIFO_T) == 0)
+		if (strcmp(app_var.stack_mode, LIFO_T) == 0)
 			*stack = dll_pop(*stack);
 		else
 			*stack = dll_pop_end(*stack);
 	}
+	else
+		make_sntx_err("L%d: can't pop an empty stack\n", line_number, NULL);
 }

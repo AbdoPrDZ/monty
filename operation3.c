@@ -10,16 +10,12 @@ void op_mul(stack_t **stack, unsigned int line_number)
 	stack_t *first = stack ? *stack : NULL;
 	stack_t *second;
 
-	if (first == NULL)
-		make_sntx_err("L%d: can't mul, stack too short\n", line_number, NULL);
-	else
+	if (first)
 	{
 		while (first->prev)
 			first = first->prev;
 
-		if (first->next == NULL)
-			make_sntx_err("L%d: can't mul, stack too short\n", line_number, NULL);
-		else
+		if (first->next)
 		{
 			second = first->next;
 
@@ -29,8 +25,11 @@ void op_mul(stack_t **stack, unsigned int line_number)
 			first = _free(first);
 
 			*stack = second;
+			return;
 		}
 	}
+
+	make_sntx_err("L%d: can't mul, stack too short\n", line_number, NULL);
 }
 
 /**
@@ -43,16 +42,12 @@ void op_mod(stack_t **stack, unsigned int line_number)
 	stack_t *first = stack ? *stack : NULL;
 	stack_t *second;
 
-	if (first == NULL)
-		make_sntx_err("L%d: can't mod, stack too short\n", line_number, NULL);
-	else
+	if (first)
 	{
 		while (first->prev)
 			first = first->prev;
 
-		if (first->next == NULL)
-			make_sntx_err("L%d: can't mod, stack too short\n", line_number, NULL);
-		else
+		if (first->next)
 		{
 			second = first->next;
 
@@ -67,8 +62,12 @@ void op_mod(stack_t **stack, unsigned int line_number)
 
 				*stack = second;
 			}
+
+			return;
 		}
 	}
+
+	make_sntx_err("L%d: can't mod, stack too short\n", line_number, NULL);
 }
 
 /**
@@ -80,9 +79,7 @@ void op_pchar(stack_t **stack, unsigned int line_number)
 {
 	stack_t *node = stack ? *stack : NULL;
 
-	if (node == NULL)
-		make_sntx_err("L%d: can't pchar, stack empty\n", line_number, NULL);
-	else
+	if (node)
 	{
 		while (node->prev)
 			node = node->prev;
@@ -92,6 +89,8 @@ void op_pchar(stack_t **stack, unsigned int line_number)
 		else
 			make_sntx_err("L%d: can't pchar, value out of range\n", line_number, NULL);
 	}
+	else
+		make_sntx_err("L%d: can't pchar, stack empty\n", line_number, NULL);
 }
 
 /**

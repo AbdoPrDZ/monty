@@ -10,16 +10,12 @@ void op_swap(stack_t **stack, unsigned int line_number)
 	stack_t *first = stack ? *stack : NULL;
 	stack_t *second, *thread;
 
-	if (first == NULL)
-		make_sntx_err("L%d: can't swap, stack too short\n", line_number, NULL);
-	else
+	if (first)
 	{
 		while (first->prev)
 			first = first->prev;
 
-		if (first->next == NULL)
-			make_sntx_err("L%d: can't swap, stack too short\n", line_number, NULL);
-		else
+		if (first->next)
 		{
 			second = first->next;
 			thread = second->next;
@@ -34,8 +30,11 @@ void op_swap(stack_t **stack, unsigned int line_number)
 			first->prev = second;
 
 			*stack = second;
+			return;
 		}
 	}
+
+	make_sntx_err("L%d: can't swap, stack too short\n", line_number, NULL);
 }
 
 /**
@@ -48,16 +47,12 @@ void op_add(stack_t **stack, unsigned int line_number)
 	stack_t *first = stack ? *stack : NULL;
 	stack_t *second;
 
-	if (first == NULL)
-		make_sntx_err("L%d: can't add, stack too short\n", line_number, NULL);
-	else
+	if (first)
 	{
 		while (first->prev)
 			first = first->prev;
 
-		if (first->next == NULL)
-			make_sntx_err("L%d: can't add, stack too short\n", line_number, NULL);
-		else
+		if (first->next)
 		{
 			second = first->next;
 
@@ -67,8 +62,11 @@ void op_add(stack_t **stack, unsigned int line_number)
 			first = _free(first);
 
 			*stack = second;
+			return;
 		}
 	}
+
+	make_sntx_err("L%d: can't add, stack too short\n", line_number, NULL);
 }
 
 /**
@@ -92,16 +90,12 @@ void op_sub(stack_t **stack, unsigned int line_number)
 	stack_t *first = stack ? *stack : NULL;
 	stack_t *second;
 
-	if (first == NULL)
-		make_sntx_err("L%d: can't sub, stack too short\n", line_number, NULL);
-	else
+	if (first)
 	{
 		while (first->prev)
 			first = first->prev;
 
-		if (first->next == NULL)
-			make_sntx_err("L%d: can't sub, stack too short\n", line_number, NULL);
-		else
+		if (first->next)
 		{
 			second = first->next;
 
@@ -111,8 +105,11 @@ void op_sub(stack_t **stack, unsigned int line_number)
 			first = _free(first);
 
 			*stack = second;
+			return;
 		}
 	}
+
+	make_sntx_err("L%d: can't sub, stack too short\n", line_number, NULL);
 }
 
 /**
@@ -125,16 +122,12 @@ void op_div(stack_t **stack, unsigned int line_number)
 	stack_t *first = stack ? *stack : NULL;
 	stack_t *second;
 
-	if (first == NULL)
-		make_sntx_err("L%d: can't div, stack too short\n", line_number, NULL);
-	else
+	if (first)
 	{
 		while (first->prev)
 			first = first->prev;
 
-		if (first->next == NULL)
-			make_sntx_err("L%d: can't div, stack too short\n", line_number, NULL);
-		else
+		if (first->next)
 		{
 			second = first->next;
 
@@ -149,6 +142,10 @@ void op_div(stack_t **stack, unsigned int line_number)
 
 				*stack = second;
 			}
+
+			return;
 		}
 	}
+
+	make_sntx_err("L%d: can't div, stack too short\n", line_number, NULL);
 }

@@ -16,7 +16,7 @@ char *_strcpy(char *str)
 	str_len = strlen(str);
 
 	cpy = malloc(sizeof(char) * (str_len + 1));
-	if (cpy == NULL)
+	if (!cpy)
 	{
 		make_malloc_err();
 		return (NULL);
@@ -40,13 +40,13 @@ char *str_rev(char *str)
 	int i, len;
 	char *reversed;
 
-	if (str == NULL)
+	if (!str)
 		return (NULL);
 
 	len = strlen(str);
 
 	reversed = malloc(sizeof(char) * (len + 1));
-	if (reversed == NULL)
+	if (!reversed)
 	{
 		make_malloc_err();
 		return (NULL);
@@ -94,11 +94,11 @@ char *str_cut(char *str, const int s, const int e)
 	int i, j, len = strlen(str);
 	char *cstr;
 
-	if (str == NULL || s > e || e > len)
+	if (!str || s > e || e > len)
 		return (NULL);
 
 	cstr = malloc(sizeof(char) * (e - s + 1));
-	if (cstr == NULL)
+	if (!cstr)
 	{
 		make_malloc_err();
 		return (NULL);
@@ -123,7 +123,7 @@ char *str_clean_spaces_se(char *str)
 	char *cstr, *rstr;
 	app_err_t *app_err = app_var.app_err;
 
-	if (str == NULL)
+	if (!str)
 		return (NULL);
 
 	len = strlen(str);
@@ -132,7 +132,7 @@ char *str_clean_spaces_se(char *str)
 		start++, i++;
 
 	rstr = str_rev(str);
-	if (rstr == NULL && app_err)
+	if ( app_err)
 		return (NULL);
 
 	i = 0;
@@ -142,7 +142,7 @@ char *str_clean_spaces_se(char *str)
 	end = len - end;
 
 	cstr = str_cut(str, start, end);
-	if (cstr == NULL && app_err)
+	if ( app_err)
 		return (NULL);
 
 	return (cstr);

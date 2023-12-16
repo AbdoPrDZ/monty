@@ -8,7 +8,7 @@ void make_file_err(char *filename)
 {
 
 	app_err_t *app_err = malloc(sizeof(app_err_t));
-	if (app_err == NULL)
+	if (!app_err)
 		exit_with_malloc_err();
 
 	app_err->type = FILE_err;
@@ -27,7 +27,7 @@ void make_file_err(char *filename)
 void make_sntx_err(char *error, unsigned int ln, char *line)
 {
 	app_err_t *app_err = malloc(sizeof(app_err_t));
-	if (app_err == NULL)
+	if (!app_err)
 		exit_with_malloc_err();
 
 	app_err->type = SYNTAX_err;
@@ -44,7 +44,7 @@ void make_sntx_err(char *error, unsigned int ln, char *line)
 void make_malloc_err(void)
 {
 	app_err_t *app_err = malloc(sizeof(app_err_t));
-	if (app_err == NULL)
+	if (!app_err)
 		exit_with_malloc_err();
 
 	app_err->type = MALLOC_err;

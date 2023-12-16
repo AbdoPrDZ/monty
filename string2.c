@@ -9,7 +9,7 @@ int str_is_int(char *str)
 {
 	int i = 0;
 
-	if (str == NULL)
+	if (!str)
 		return (0);
 
 	if (str[0] == '-')
@@ -37,7 +37,7 @@ char *str_add_char(char *str, char c)
 		str_len = strlen(str);
 
 	new_str = malloc(sizeof(char) * (str_len + 2));
-	if (new_str == NULL)
+	if (!new_str)
 	{
 		make_malloc_err();
 		return (NULL);
