@@ -138,7 +138,7 @@ void op_div(stack_t **stack, unsigned int line_number)
 		{
 			second = first->next;
 
-			if (second->n == 0)
+			if (first->n == 0)
 				make_sntx_err("L%d: division by zero\n", line_number, NULL);
 			else
 			{

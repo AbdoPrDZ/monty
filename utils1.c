@@ -48,7 +48,6 @@ void make_malloc_err(void)
 		exit_with_malloc_err();
 
 	app_err->type = MALLOC_err;
-
 	app_var.app_err = app_err;
 }
 

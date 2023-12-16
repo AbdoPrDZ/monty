@@ -114,7 +114,7 @@ void op_pop(stack_t **stack, unsigned int line_number)
 	stack_t *node = stack ? *stack : NULL;
 
 	if (node == NULL)
-		make_sntx_err("L%d: can't pop, stack empty\n", line_number, NULL);
+		make_sntx_err("L%d: can't pop an empty stack\n", line_number, NULL);
 	else
 	{
 		if (strcmp(app_var.stack_mode, FIFO_T) == 0)

@@ -11,14 +11,14 @@ void op_mul(stack_t **stack, unsigned int line_number)
 	stack_t *second;
 
 	if (first == NULL)
-		make_sntx_err("L%d: can't div, stack too short\n", line_number, NULL);
+		make_sntx_err("L%d: can't mul, stack too short\n", line_number, NULL);
 	else
 	{
 		while (first->prev)
 			first = first->prev;
 
 		if (first->next == NULL)
-			make_sntx_err("L%d: can't div, stack too short\n", line_number, NULL);
+			make_sntx_err("L%d: can't mul, stack too short\n", line_number, NULL);
 		else
 		{
 			second = first->next;
@@ -56,7 +56,7 @@ void op_mod(stack_t **stack, unsigned int line_number)
 		{
 			second = first->next;
 
-			if (second->n == 0)
+			if (first->n == 0)
 				make_sntx_err("L%d: division by zero\n", line_number, NULL);
 			else
 			{
