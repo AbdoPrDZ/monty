@@ -121,7 +121,6 @@ char *str_clean_spaces_se(char *str)
 {
 	int i = 0, start = 0, end = 0, len;
 	char *cstr, *rstr;
-	app_err_t *app_err = app_var.app_err;
 
 	if (!str)
 		return (NULL);
@@ -132,7 +131,7 @@ char *str_clean_spaces_se(char *str)
 		start++, i++;
 
 	rstr = str_rev(str);
-	if ( app_err)
+	if (app_var.app_err)
 		return (NULL);
 
 	i = 0;
@@ -142,7 +141,7 @@ char *str_clean_spaces_se(char *str)
 	end = len - end;
 
 	cstr = str_cut(str, start, end);
-	if ( app_err)
+	if (app_var.app_err)
 		return (NULL);
 
 	return (cstr);

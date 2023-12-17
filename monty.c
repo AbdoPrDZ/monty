@@ -11,19 +11,18 @@ char *get_operation_name(char *clean_line)
 {
 	int space_pos;
 	char *operation;
-	app_err_t *app_err = app_var.app_err;
 
 	space_pos = str_contains_char(clean_line, ' ');
 	if (space_pos != -1)
 	{
 		operation = str_cut(clean_line, 0, space_pos);
-		if (app_err)
+		if (app_var.app_err)
 			return (NULL);
 	}
 	else
 	{
 		operation = _strcpy(clean_line);
-		if (app_err)
+		if (app_var.app_err)
 			return (NULL);
 	}
 
@@ -39,20 +38,19 @@ char *get_operation_arg(char *cline)
 {
 	char *arg = NULL;
 	int space_pos;
-	app_err_t *app_err = app_var.app_err;
 
 	space_pos = str_contains_char(cline, ' ');
 	if (space_pos != -1)
 	{
 		arg = str_clean_spaces_se(str_cut(cline, space_pos, strlen(cline)));
-		if (app_err)
+		if (app_var.app_err)
 			return (NULL);
 
 		space_pos = str_contains_char(arg, ' ');
 		if (space_pos != -1)
 		{
 			arg = str_cut(arg, 0, space_pos);
-			if (app_err)
+			if (app_var.app_err)
 				return (NULL);
 		}
 	}
@@ -71,20 +69,19 @@ int get_op_and_exe(char *operation, char *arg)
 	char *line;
 	unsigned int ln;
 	command_line_t *current_command_line = app_var.current_command_line;
-	app_err_t *app_err = app_var.app_err;
 
 	line = current_command_line->line;
 	ln = current_command_line->line_number;
 
 	current_command_line->arg = _strcpy(arg);
-	if (app_err)
+	if (app_var.app_err)
 		return (0);
 
 	get_operation_func(operation);
 	if (current_command_line->op_func)
 	{
 		current_command_line->op_func(&app_var.global_stack, ln);
-		if (app_err)
+		if (app_var.app_err)
 			return (0);
 	}
 	else
@@ -108,29 +105,28 @@ int execute_command_line(char *line, unsigned int line_number)
 	char *cline = NULL;
 	char *operation = NULL, *arg = NULL;
 	command_line_t *current_command_line = app_var.current_command_line;
-	app_err_t *app_err = app_var.app_err;
 
 	current_command_line->line = _strcpy(line);
-	if (app_err)
+	if (app_var.app_err)
 		return (0);
 	current_command_line->line_number = line_number;
 	current_command_line->arg = NULL;
 	current_command_line->op_func = NULL;
 
 	cline = str_clean_spaces_se(line);
-	if (app_err)
+	if (app_var.app_err)
 		return (0);
 
 	line_len = strlen(cline);
 	if (cline[0] != '#' && line_len != 0)
 	{
 		operation = get_operation_name(cline);
-		if (app_err)
+		if (app_var.app_err)
 			status = 0;
 		else
 		{
 			arg = get_operation_arg(cline);
-			if (app_err)
+			if (app_var.app_err)
 				status = 0;
 		}
 
@@ -179,7 +175,6 @@ int main(int argc, char *argv[])
 	file_read_lines(filename, execute_command_line);
 
 	reset_current_command_line();
-	app_var.global_stack = dll_free(app_var.global_stack);
 
 	if (app_var.app_err)
 		exit_with_app_err();
